@@ -33,16 +33,16 @@ const initAttempt = {
 
 const fields = Object.keys(initValues);
 
-export default ({word, handleOnSubmit, stop}) => {
+const CheckVerbForm = ({word, handleOnSubmit, stop}) => {
     const {meaning} = word;
     const [attempt, setAttempt] = useState(initAttempt);
     return (
         <Formik
             initialValues={initValues}
             validationSchema={validationSchema}
-            onSubmit={(values, {validateForm, setFieldError, setErrors}) => {
+            onSubmit={(values, {validateForm, setFieldError, setErrors, resetForm}) => {
                 setAttempt(initAttempt);
-                const newAttempt = initAttempt;
+                const newAttempt = Object.assign({}, initAttempt);
                 const errorsAfterCheck = {};
 
                 Object.keys(values).forEach(key => {
@@ -61,8 +61,11 @@ export default ({word, handleOnSubmit, stop}) => {
                 if (newErrors) {
                     setErrors(errorsAfterCheck);
                 } else {
-                    console.log('finish with timeout 300ms');
-                    handleOnSubmit()
+                    setTimeout(() => {
+                        setAttempt(initAttempt);
+                        resetForm();
+                        handleOnSubmit()
+                    }, 800)
                 }
             }}
         >
@@ -82,11 +85,23 @@ export default ({word, handleOnSubmit, stop}) => {
                             <ErrorMessage name={name} component="div"/>
                         </div>
                     ))}
-                    <button type="submit">Forward</button>
-                    <button type="text" onClick={stop}>Stop</button>
+                    <button type="submit">Next</button>
+                    <button type="text" onClick={stop}>Stop Training</button>
                 </Form>
             )}
 
         </Formik>
     );
 };
+
+CheckVerbForm.defaultProps = {
+    word: {
+        meaning: ''
+    },
+    handleOnSubmit: () => {
+    },
+    stop: () => {
+    }
+};
+
+export default CheckVerbForm;

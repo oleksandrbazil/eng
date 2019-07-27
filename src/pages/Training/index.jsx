@@ -1,75 +1,109 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 //components
 import Page from "../../components/Page";
 import CheckVerbForm from "./components/CheckVerbForm";
-import Settings from './components/Settings'
+import FormSettings from './components/FormSettings'
 // others
 import {irregularVerbs} from "../../data";
 import {getRandom} from "./helpers";
 
 
 const defaultSettings = {
-    withExtended: false,
+    withExtended: true,
     oneAttempt: false,
     numberOfCards: 10,
 };
 
+// statuses
+const START = 'start';
+const PROGRESS = 'progress';
+const FINISH = 'finish';
+
 export default () => {
+    const [status, setStatus] = useState(START);
     const [settings, setSettings] = useState(defaultSettings);
-    const [isTraining, setIsTraining] = useState(false);
     const [cards, setCards] = useState([]);
+    const [words, setWords] = useState(irregularVerbs);
     const [step, setStep] = useState(0);
 
     const {withExtended, numberOfCards} = settings;
 
+    useEffect(() => {
+        setWords(withExtended ? irregularVerbs : irregularVerbs.filter(({extended}) => !extended))
+    }, [withExtended]);
+
     const start = () => {
-        const words = withExtended ? irregularVerbs : irregularVerbs.filter(({extended}) => !extended)
-        const cards = getRandom(words, numberOfCards);
-        setCards(cards);
+        setCards(getRandom(words, numberOfCards));
         setStep(0);
-        setIsTraining(true);
+        setStatus(PROGRESS);
     };
 
-    const stop = () => {
-        setIsTraining(false);
+    const finish = () => {
+        setStatus(FINISH);
     };
 
-
-    const nextCard = () => {
+    const next = () => {
         if (step >= numberOfCards) {
-            setIsTraining(false);
+            setStatus(FINISH);
         } else {
             setStep(step + 1)
         }
     };
 
+
     const StartBlock = (
         <div>
-            <Settings setSettings={setSettings} settings={settings}/>
-            <button onClick={() => {
-                start()
-            }}>start
-            </button>
+            <h6>Setup settings</h6>
+            <FormSettings
+                settings={settings}
+                maxNumberOfCards={words.length}
+                setSettings={(newSettings) => {
+                    setSettings(newSettings)
+                }}
+                handleSubmit={(values) => {
+                    setSettings(values);
+                    start();
+                }}/>
         </div>
     );
 
     const ProgressBlock = (
         <div>
-            <span>{step}/{numberOfCards}</span>
-            {isTraining && <CheckVerbForm
+            <h6>{step + 1}/{numberOfCards}</h6>
+            <CheckVerbForm
                 handleOnSubmit={() => {
-                    nextCard()
+                    next()
                 }}
                 word={cards[step]}
-                stop={stop}/>}
+                stop={finish}/>
+        </div>
+    );
+
+    const FinishBlock = (
+        <div>
+            <h6>Your results:</h6>
+            <div>
+                <button onClick={() => {
+                    setStatus(START);
+                }}>Repeat
+                </button>
+            </div>
+            <div>
+                <button onClick={() => {
+                    setStatus(START);
+                    setSettings(defaultSettings);
+                }}>Go to Settings
+                </button>
+            </div>
         </div>
     );
 
     return (
         <Page title="Training">
             <div>
-                {!isTraining && StartBlock}
-                {isTraining && ProgressBlock}
+                {status === START && StartBlock}
+                {status === PROGRESS && ProgressBlock}
+                {status === FINISH && FinishBlock}
             </div>
         </Page>
     );
