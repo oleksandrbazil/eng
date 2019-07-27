@@ -32,7 +32,7 @@ export default () => {
         setWords(withExtended ? irregularVerbs : irregularVerbs.filter(({extended}) => !extended))
     }, [withExtended]);
 
-    const start = () => {
+    const start = (numberOfCards) => {
         setCards(getRandom(words, numberOfCards));
         setStep(0);
         setStatus(PROGRESS);
@@ -43,10 +43,10 @@ export default () => {
     };
 
     const next = () => {
-        if (step >= numberOfCards) {
+        const nextStep = step + 1;
+        setStep(nextStep);
+        if (nextStep === numberOfCards) {
             setStatus(FINISH);
-        } else {
-            setStep(step + 1)
         }
     };
 
@@ -62,7 +62,8 @@ export default () => {
                 }}
                 handleSubmit={(values) => {
                     setSettings(values);
-                    start();
+                    start(values.numberOfCards);
+
                 }}/>
         </div>
     );

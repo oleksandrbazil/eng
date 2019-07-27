@@ -19,10 +19,11 @@ const FormSettings = ({settings, handleSubmit, setSettings, maxNumberOfCards = 0
                 return errors
             }}
             onSubmit={(values) => {
+                values.numberOfCards = Number(values.numberOfCards);
                 handleSubmit(values)
             }}
         >
-            {({errors, touched, submitForm, values, ...rest}) => (
+            {({errors, touched}) => (
                 <Form>
                     <table>
                         <tbody>
