@@ -30,6 +30,12 @@ const useStyles = makeStyles(theme => ({
     message: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
+        '&.error': {
+            color: theme.palette.secondary.main
+        },
+        '&.success': {
+            color: theme.palette.primary.main
+        }
     },
 }));
 
@@ -63,8 +69,13 @@ const CheckVerbForm = ({word, handleOnSubmit, stop}) => {
             validationSchema={validationSchema}
             onSubmit={(values, {validateForm, setFieldError, setErrors, resetForm}) => {
                 setAttempt(initAttempt);
-                const newAttempt = Object.assign({}, initAttempt);
                 const errorsAfterCheck = {};
+                const newAttempt = {
+                    errors: {},
+                    success: {},
+                    message: ''
+                };
+
 
                 Object.keys(values).forEach(key => {
                     if (word[key] !== values[key]) {
@@ -94,9 +105,8 @@ const CheckVerbForm = ({word, handleOnSubmit, stop}) => {
                 <Form>
                     <Card>
                         <CardContent>
-                            <Typography gutterBottom variant="subtitle1" className={classes.message}
-                                        error={attempt.errors}
-                                        color="green">
+                            <Typography gutterBottom variant="subtitle1"
+                                        className={`${classes.message} ${Object.keys(attempt.errors).length > 0 ? 'error' : 'success'}`}>
                                 {attempt.message}
                             </Typography>
                             <Typography gutterBottom variant="h4" component="h2" color="primary">
@@ -110,7 +120,7 @@ const CheckVerbForm = ({word, handleOnSubmit, stop}) => {
                         </CardContent>
                         <CardActions>
                             <Button variant="contained" color="primary" type="submit">Next</Button>
-                            <Button color="secondary" type="text" onClick={stop}>Stop Training</Button>
+                            <Button color="secondary" onClick={stop} >Stop Training</Button>
                         </CardActions>
                     </Card>
                 </Form>

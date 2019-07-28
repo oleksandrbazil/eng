@@ -19,9 +19,8 @@ export default ({errors, touched, name, label, fullWidth, className}) => {
                      className={className}>
             <InputLabel htmlFor={name} ref={labelRef}>{label}</InputLabel>
             <Field id={name} name={name}
-                   render={({field, form: {isSubmitting}}) => (
-                       <OutlinedInput {...field} disabled={isSubmitting}
-                                      labelWidth={labelWidth}/>
+                   render={({field}) => (
+                       <OutlinedInput {...field} labelWidth={labelWidth}/>
                    )}/>
             <ErrorMessage name={name} component={FormHelperText}
                           error={errors.numberOfCards && touched.numberOfCards}/>
