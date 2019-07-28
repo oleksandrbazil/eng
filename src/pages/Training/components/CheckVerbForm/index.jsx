@@ -1,6 +1,15 @@
 import React, {useState} from "react";
-import {Formik, Form, Field, ErrorMessage} from "formik";
+// libs
+import {Formik, Form} from "formik";
 import * as Yup from "yup";
+import {makeStyles} from '@material-ui/core/styles';
+// ui components
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import OutlinedInput from '../../../../components/OutlinedInput'
 
 const defaultMessage = 'use only alphabet of english';
 
@@ -12,6 +21,17 @@ Yup.addMethod(Yup.string, "isEnglish", function (args) {
         return value ? value.match(/^[A-Za-z]*$/) || createError({path, message}) : true;
     })
 });
+
+const useStyles = makeStyles(theme => ({
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+    },
+    message: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+    },
+}));
 
 const validationSchema = Yup.object().shape({
     v1: Yup.string().isEnglish('').required(),
@@ -36,6 +56,7 @@ const fields = Object.keys(initValues);
 const CheckVerbForm = ({word, handleOnSubmit, stop}) => {
     const {meaning} = word;
     const [attempt, setAttempt] = useState(initAttempt);
+    const classes = useStyles();
     return (
         <Formik
             initialValues={initValues}
@@ -71,22 +92,27 @@ const CheckVerbForm = ({word, handleOnSubmit, stop}) => {
         >
             {({errors, touched}) => (
                 <Form>
-                    {meaning}
-                    <div>
-                        {attempt.message}
-                    </div>
-                    {fields.map((name, index) => (
-                        <div key={name}
-                             className={(errors[name] && touched[name]) || attempt.errors[name] ? 'error' : ''}>
-                            <label htmlFor={name}>
-                                V<sub>{index + 1}</sub>
-                            </label>
-                            <Field id={name} name={name}/>
-                            <ErrorMessage name={name} component="div"/>
-                        </div>
-                    ))}
-                    <button type="submit">Next</button>
-                    <button type="text" onClick={stop}>Stop Training</button>
+                    <Card>
+                        <CardContent>
+                            <Typography gutterBottom variant="subtitle1" className={classes.message}
+                                        error={attempt.errors}
+                                        color="green">
+                                {attempt.message}
+                            </Typography>
+                            <Typography gutterBottom variant="h4" component="h2" color="primary">
+                                {meaning}
+                            </Typography>
+                            {fields.map((name, index) => (
+                                <OutlinedInput key={name} errors={errors} touched={touched} name={name}
+                                               label={`V${index + 1}`}
+                                               className={classes.textField}/>
+                            ))}
+                        </CardContent>
+                        <CardActions>
+                            <Button variant="contained" color="primary" type="submit">Next</Button>
+                            <Button color="secondary" type="text" onClick={stop}>Stop Training</Button>
+                        </CardActions>
+                    </Card>
                 </Form>
             )}
 

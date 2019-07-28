@@ -2,6 +2,21 @@ import React, {useState, useEffect} from "react";
 // components
 import Page from "../../components/Page";
 import {irregularVerbs} from "../../data";
+// ui components
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Switch from '@material-ui/core/Switch';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
 
 export default () => {
     const [verbs, setVerbs] = useState(irregularVerbs);
@@ -22,69 +37,85 @@ export default () => {
 
     return (
         <Page title="Irregular Verbs">
-            <table>
-                <tbody>
-                <tr>
-                    <td><label htmlFor="extended">extended</label></td>
-                    <td>
-                        <input id="extended" type="checkbox"
-                               value={showExtended}
-                               onChange={() => {
-                                   setShowExtended(!showExtended)
-                               }}/>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label htmlFor="transcription">transcription</label></td>
-                    <td>
-                        <input id="transcription" type="checkbox"
-                               value={showTranscription}
-                               onChange={() => {
-                                   setShowTranscription(!showTranscription)
-                               }}/>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label htmlFor="search">search</label></td>
-                    <td>
-                        <input id="search" type="text" onChange={(event) => {
-                            const {target: {value} = {value: ''}} = event;
-                            setSearchBy(value)
-                        }}/>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <table>
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Форма 1</th>
-                    <th>Форма 2</th>
-                    <th>Форма 3</th>
-                    <th>Значение</th>
-                </tr>
-                </thead>
-                <tbody>
-                {verbs.map(
-                    ({id, group, v1, t1, v2, t2, v3, t3, meaning}, index) => (
-                        <tr key={id}>
-                            <td>{index + 1}</td>
-                            <td>
-                                {v1} {showTranscription ? t1 : null}
-                            </td>
-                            <td>
-                                {v2} {showTranscription ? t2 : null}
-                            </td>
-                            <td>
-                                {v3} {showTranscription ? t3 : null}
-                            </td>
-                            <td>{meaning}</td>
-                        </tr>
-                    )
-                )}
-                </tbody>
-            </table>
+            <Grid container justify="center" alignItems="center">
+                <Card>
+                    <CardContent>
+                        <FormControl fullWidth>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={showExtended}
+                                        onChange={() => {
+                                            setShowExtended(!showExtended)
+                                        }}
+                                        value="extended"
+                                        color="primary"
+                                    />
+                                }
+                                label="With Extended"
+                            />
+                        </FormControl>
+                        <FormControl fullWidth>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={showTranscription}
+                                        onChange={() => {
+                                            setShowTranscription(!showTranscription)
+                                        }}
+                                        value="extended"
+                                        color="primary"
+                                    />
+                                }
+                                label="Show Transcription"
+                            />
+                        </FormControl>
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="search">search</InputLabel>
+                            <Input id="search" type="search" onChange={(event) => {
+                                const {target: {value} = {value: ''}} = event;
+                                setSearchBy(value)
+                            }}/>
+                        </FormControl>
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid container justify="center" alignItems="center">
+                <Grid item={8}>
+                    <Paper>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>#</TableCell>
+                                    <TableCell>Form 1</TableCell>
+                                    <TableCell>Form 2</TableCell>
+                                    <TableCell>Form 3</TableCell>
+                                    <TableCell>Meaning</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {verbs.map(
+                                    ({id, group, v1, t1, v2, t2, v3, t3, meaning}, index) => (
+                                        <TableRow key={id} hover>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>
+                                                {v1} {showTranscription ? t1 : null}
+                                            </TableCell>
+                                            <TableCell>
+                                                {v2} {showTranscription ? t2 : null}
+                                            </TableCell>
+                                            <TableCell>
+                                                {v3} {showTranscription ? t3 : null}
+                                            </TableCell>
+                                            <TableCell>{meaning}</TableCell>
+                                        </TableRow>
+                                    )
+                                )}
+                            </TableBody>
+                        </Table>
+                    </Paper>
+                </Grid>
+            </Grid>
         </Page>
     );
 };

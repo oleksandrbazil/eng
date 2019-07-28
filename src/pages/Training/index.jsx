@@ -3,6 +3,16 @@ import React, {useState, useEffect} from "react";
 import Page from "../../components/Page";
 import CheckVerbForm from "./components/CheckVerbForm";
 import FormSettings from './components/FormSettings'
+// ui components
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
+
 // others
 import {irregularVerbs} from "../../data";
 import {getRandom} from "./helpers";
@@ -50,24 +60,6 @@ export default () => {
         }
     };
 
-
-    const StartBlock = (
-        <div>
-            <h6>Setup settings</h6>
-            <FormSettings
-                settings={settings}
-                maxNumberOfCards={words.length}
-                setSettings={(newSettings) => {
-                    setSettings(newSettings)
-                }}
-                handleSubmit={(values) => {
-                    setSettings(values);
-                    start(values.numberOfCards);
-
-                }}/>
-        </div>
-    );
-
     const ProgressBlock = (
         <div>
             <h6>{step + 1}/{numberOfCards}</h6>
@@ -81,31 +73,50 @@ export default () => {
     );
 
     const FinishBlock = (
-        <div>
-            <h6>Your results:</h6>
-            <div>
-                <button onClick={() => {
-                    setStatus(START);
-                }}>Repeat
-                </button>
-            </div>
-            <div>
-                <button onClick={() => {
-                    setStatus(START);
-                    setSettings(defaultSettings);
-                }}>Go to Settings
-                </button>
-            </div>
-        </div>
+        <Card>
+            <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                    Your results
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <FormControl>
+                    <ButtonGroup variant="contained" color="primary">
+                        <Button
+                            onClick={() => {
+                                setStatus(START);
+                            }}>Repeat
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setStatus(START);
+                                setSettings(defaultSettings);
+                            }}>Go to Settings
+                        </Button>
+                    </ButtonGroup>
+                </FormControl>
+            </CardActions>
+
+        </Card>
     );
 
     return (
         <Page title="Training">
-            <div>
-                {status === START && StartBlock}
+            <Grid container justify="center" alignItems="center">
+                {status === START && <FormSettings
+                    settings={settings}
+                    maxNumberOfCards={words.length}
+                    setSettings={(newSettings) => {
+                        setSettings(newSettings)
+                    }}
+                    handleSubmit={(values) => {
+                        setSettings(values);
+                        start(values.numberOfCards);
+
+                    }}/>}
                 {status === PROGRESS && ProgressBlock}
                 {status === FINISH && FinishBlock}
-            </div>
+            </Grid>
         </Page>
     );
 };

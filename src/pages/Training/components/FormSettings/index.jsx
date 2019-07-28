@@ -1,5 +1,15 @@
 import React from 'react';
-import {Formik, Form, Field, ErrorMessage} from "formik";
+import {Formik, Form} from "formik";
+// ui components
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import Button from '@material-ui/core/Button';
+import OutlinedInput from '../../../../components/OutlinedInput'
 
 
 const FormSettings = ({settings, handleSubmit, setSettings, maxNumberOfCards = 0}) => {
@@ -9,12 +19,14 @@ const FormSettings = ({settings, handleSubmit, setSettings, maxNumberOfCards = 0
             validate={(values) => {
                 const errors = {};
                 const count = values.numberOfCards;
-                if (count && !count.match(/^[0-9]*$/)) {
-                    errors.numberOfCards = 'Please, enter only numbers'
+                if (!count) {
+                    errors.numberOfCards = 'is required'
+                } else if (count && !count.match(/^[0-9]*$/)) {
+                    errors.numberOfCards = 'accept only numbers'
                 } else if (count && count <= 0) {
-                    errors.numberOfCards = `Too few cards, minimum 1 card`
+                    errors.numberOfCards = `minimum number is 1`
                 } else if (count && count > maxNumberOfCards) {
-                    errors.numberOfCards = `Too many cards, maximum number of cards is ${maxNumberOfCards}`
+                    errors.numberOfCards = `maximum number is ${maxNumberOfCards}`
                 }
                 return errors
             }}
@@ -25,42 +37,52 @@ const FormSettings = ({settings, handleSubmit, setSettings, maxNumberOfCards = 0
         >
             {({errors, touched}) => (
                 <Form>
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td><label htmlFor="withExtended">With Extended</label></td>
-                            <td>
-                                <input id="withExtended" type="checkbox"
-                                       onChange={({target: {checked: withExtended}}) => {
-                                           setSettings({...settings, withExtended})
-                                       }}
-                                       checked={settings.withExtended}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><label htmlFor="oneAttempt">One Attempt</label></td>
-                            <td>
-                                <input id="oneAttempt" type="checkbox"
-                                       onChange={({target: {checked: oneAttempt}}) => {
-                                           setSettings({...settings, oneAttempt})
-                                       }}
-                                       checked={settings.oneAttempt}/>
-                            </td>
-                        </tr>
-                        <tr className={errors.numberOfCards && touched.numberOfCards ? 'error' : ''}>
-                            <td><label htmlFor="numberOfCards">Number of Cards</label></td>
-                            <td>
-                                <Field id="numberOfCards" type="text" name="numberOfCards"/>
-                                <ErrorMessage name="numberOfCards" component="div"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan={2}>
-                                <button type="submit">start</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <Card>
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Setup settings
+                            </Typography>
+                            <FormControl fullWidth>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={settings.withExtended}
+                                            onChange={({target: {checked: withExtended}}) => {
+                                                setSettings({...settings, withExtended})
+                                            }}
+                                            value="withExtended"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="With Extended"
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={settings.oneAttempt}
+                                            onChange={({target: {checked: oneAttempt}}) => {
+                                                setSettings({...settings, oneAttempt})
+                                            }}
+                                            value="oneAttempt"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="One Attempt"
+                                />
+                            </FormControl>
+                            <OutlinedInput errors={errors} touched={touched} name="numberOfCards"
+                                           label="Number of Cards"
+                                           fullWidth/>
+                        </CardContent>
+                        <CardActions>
+                            <Button variant="contained" color="primary" type="submit">start</Button>
+                        </CardActions>
+                    </Card>
+
+
                 </Form>
             )}
         </Formik>
