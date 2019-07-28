@@ -5,13 +5,13 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import {BrowserRouter as Router} from "react-router-dom";
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
+import blue from '@material-ui/core/colors/blue';
 import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 
 const theme = createMuiTheme({
     palette: {
-        primary: purple,
+        primary: blue,
         secondary: red,
         success: green // TODO how to add custom variant?
     },

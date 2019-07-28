@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import {makeStyles} from '@material-ui/core/styles';
 // components
 import Page from "../../components/Page";
 import {irregularVerbs} from "../../data";
@@ -18,35 +19,50 @@ import Switch from '@material-ui/core/Switch';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 
+const useStyles = makeStyles(theme => ({
+    helper: {
+        marginBottom: theme.spacing(3),
+    },
+    column: {
+        color: 'white',
+        backgroundColor: theme.palette.primary.main,
+    },
+    t: {
+        color: 'gray'
+    }
+}));
+
+
 export default () => {
+    const classes = useStyles();
     const [verbs, setVerbs] = useState(irregularVerbs);
     const [searchBy, setSearchBy] = useState('');
-    const [showExtended, setShowExtended] = useState(false);
+    const [withExtended, setWithExtended] = useState(false);
     const [showTranscription, setShowTranscription] = useState(true);
 
     useEffect(() => {
         let words = irregularVerbs;
-        if (showExtended) {
+        if (!withExtended) {
             words = words.filter(({extended}) => !extended);
         }
         if (searchBy) {
             words = words.filter(({v1, v2, v3, meaning}) => v1.includes(searchBy) || v2.includes(searchBy) || v3.includes(searchBy) || meaning.includes(searchBy));
         }
         setVerbs(words)
-    }, [showExtended, searchBy]);
+    }, [withExtended, searchBy]);
 
     return (
         <Page title="Irregular Verbs">
             <Grid container justify="center" alignItems="center">
-                <Card>
+                <Card className={classes.helper}>
                     <CardContent>
                         <FormControl fullWidth>
                             <FormControlLabel
                                 control={
                                     <Switch
-                                        checked={showExtended}
+                                        checked={withExtended}
                                         onChange={() => {
-                                            setShowExtended(!showExtended)
+                                            setWithExtended(!withExtended)
                                         }}
                                         value="extended"
                                         color="primary"
@@ -81,16 +97,16 @@ export default () => {
                 </Card>
             </Grid>
             <Grid container justify="center" alignItems="center">
-                <Grid item={8}>
+                <Grid item={8} spacing={1}>
                     <Paper>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>#</TableCell>
-                                    <TableCell>Form 1</TableCell>
-                                    <TableCell>Form 2</TableCell>
-                                    <TableCell>Form 3</TableCell>
-                                    <TableCell>Meaning</TableCell>
+                                    <TableCell className={classes.column}>#</TableCell>
+                                    <TableCell className={classes.column}>Form 1</TableCell>
+                                    <TableCell className={classes.column}>Form 2</TableCell>
+                                    <TableCell className={classes.column}>Form 3</TableCell>
+                                    <TableCell className={classes.column}>Meaning</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -99,13 +115,16 @@ export default () => {
                                         <TableRow key={id} hover>
                                             <TableCell>{index + 1}</TableCell>
                                             <TableCell>
-                                                {v1} {showTranscription ? t1 : null}
+                                                <span>{v1}</span>
+                                                {showTranscription && <span className={classes.t}> {t1}</span>}
                                             </TableCell>
                                             <TableCell>
-                                                {v2} {showTranscription ? t2 : null}
+                                                <span>{v2}</span>
+                                                {showTranscription && <span className={classes.t}> {t2}</span>}
                                             </TableCell>
                                             <TableCell>
-                                                {v3} {showTranscription ? t3 : null}
+                                                <span>{v3}</span>
+                                                {showTranscription && <span className={classes.t}> {t3}</span>}
                                             </TableCell>
                                             <TableCell>{meaning}</TableCell>
                                         </TableRow>
