@@ -97,7 +97,7 @@ export default () => {
                 </Card>
             </Grid>
             <Grid container justify="center" alignItems="center">
-                <Grid item={8} spacing={1}>
+                <Grid items={8}>
                     <Paper>
                         <Table>
                             <TableHead>
