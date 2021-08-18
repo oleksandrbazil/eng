@@ -108,7 +108,7 @@ const IrregularVerbs = () => {
 
     return (
         <Page title="Irregular Verbs">
-            <Grid container justify="center" alignItems="center">
+            <Grid container alignItems="center" justifyContent="center">
                 <Card className={classes.helper}>
                     <CardContent>
                         <FormControl fullWidth>
@@ -144,8 +144,8 @@ const IrregularVerbs = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid container justify="center" alignItems="center">
-                <Grid item={8} spacing={1}>
+            <Grid container alignItems="center" justifyContent="center" spacing={1}>
+                <Grid item>
                     <Paper>
                         <VerbsTable verbs={verbs} showTranscription/>
                     </Paper>

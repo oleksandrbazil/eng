@@ -18,10 +18,10 @@ const OutlinedInput = ({errors, touched, name, label, fullWidth, className}) => 
                      error={errors[name] && touched[name]}
                      className={className}>
             <InputLabel htmlFor={name} ref={labelRef}>{label}</InputLabel>
-            <Field id={name} name={name}
-                   render={({field}) => (
-                       <UIOutlinedInput {...field} labelWidth={labelWidth}/>
-                   )}/>
+            <Field id={name} name={name}>
+                {({field}) => (<UIOutlinedInput {...field} labelWidth={labelWidth}/>)}
+            </Field>
+
             <ErrorMessage name={name} component={FormHelperText}
                           error={errors.numberOfCards && touched.numberOfCards}/>
         </FormControl>

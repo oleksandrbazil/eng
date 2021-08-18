@@ -102,7 +102,7 @@ const Training = () => {
 
     return (
         <Page title="Training">
-            <Grid container justify="center" alignItems="center">
+            <Grid container alignItems="center" justifyContent="center">
                 {status === START && <FormSettings
                     settings={settings}
                     maxNumberOfCards={words.length}
