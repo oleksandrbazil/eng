@@ -21,7 +21,7 @@ const FormSettings = ({settings, handleSubmit, setSettings, maxNumberOfCards = 0
                 const count = values.numberOfCards;
                 if (!count) {
                     errors.numberOfCards = 'is required'
-                } else if (count && !count.match(/^[0-9]*$/)) {
+                } else if (count && typeof count === "string" && !count.match(/^[0-9]*$/)) {
                     errors.numberOfCards = 'accept only numbers'
                 } else if (count && count <= 0) {
                     errors.numberOfCards = `minimum number is 1`
