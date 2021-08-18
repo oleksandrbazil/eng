@@ -32,8 +32,57 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+const VerbsTable = ({verbs = [], showTranscription}) => {
+    const classes = useStyles();
+    return (
+        <Table>
+            <TableHead>
+                <TableRow>
+                    <TableCell className={classes.column}>#</TableCell>
+                    <TableCell className={classes.column}>Form 1</TableCell>
+                    <TableCell className={classes.column}>Form 2</TableCell>
+                    <TableCell className={classes.column}>Form 3</TableCell>
+                    <TableCell className={classes.column}>Meaning</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {verbs.map(
+                    ({v1, t1, v2, t2, v3, t3, meaning}, index) => (
+                        <TableRow key={v1} hover>
+                            <TableCell>{index + 1}</TableCell>
+                            <TranscriptionCell
+                                verb={v1}
+                                transcription={t1}
+                                showTranscription={showTranscription}/>
+                            <TranscriptionCell
+                                verb={v2}
+                                transcription={t2}
+                                showTranscription={showTranscription}/>
+                            <TranscriptionCell
+                                verb={v3}
+                                transcription={t3}
+                                showTranscription={showTranscription}/>
+                            <TableCell>{meaning}</TableCell>
+                        </TableRow>
+                    )
+                )}
+            </TableBody>
+        </Table>
+    );
+};
 
-export default () => {
+const TranscriptionCell = ({verb = '', transcription = '', showTranscription}) => {
+    const classes = useStyles();
+    return (
+        <TableCell>
+            <span>{verb}</span>
+            {showTranscription && <span className={classes.t}> {transcription}</span>}
+        </TableCell>
+    );
+};
+
+
+const IrregularVerbs = () => {
     const classes = useStyles();
     const [verbs, setVerbs] = useState(irregularVerbs);
     const [searchBy, setSearchBy] = useState('');
@@ -46,14 +95,20 @@ export default () => {
             words = words.filter(({extended}) => !extended);
         }
         if (searchBy) {
-            words = words.filter(({v1, v2, v3, meaning}) => v1.includes(searchBy) || v2.includes(searchBy) || v3.includes(searchBy) || meaning.includes(searchBy));
+            words = words.filter(({v1, v2, v3, meaning}) => (
+                v1.includes(searchBy) || v2.includes(searchBy) || v3.includes(searchBy) || meaning.includes(searchBy)
+            ));
         }
         setVerbs(words)
     }, [withExtended, searchBy]);
 
+    const searchChangeHandler = ({target: {value} = {value: ''}}) => {
+        setSearchBy(value)
+    };
+
     return (
         <Page title="Irregular Verbs">
-            <Grid container justify="center" alignItems="center">
+            <Grid container alignItems="center" justifyContent="center">
                 <Card className={classes.helper}>
                     <CardContent>
                         <FormControl fullWidth>
@@ -61,9 +116,7 @@ export default () => {
                                 control={
                                     <Switch
                                         checked={withExtended}
-                                        onChange={() => {
-                                            setWithExtended(!withExtended)
-                                        }}
+                                        onChange={() => setWithExtended(!withExtended)}
                                         value="extended"
                                         color="primary"
                                     />
@@ -76,9 +129,7 @@ export default () => {
                                 control={
                                     <Switch
                                         checked={showTranscription}
-                                        onChange={() => {
-                                            setShowTranscription(!showTranscription)
-                                        }}
+                                        onChange={() => setShowTranscription(!showTranscription)}
                                         value="extended"
                                         color="primary"
                                     />
@@ -88,53 +139,20 @@ export default () => {
                         </FormControl>
                         <FormControl fullWidth>
                             <InputLabel htmlFor="search">search</InputLabel>
-                            <Input id="search" type="search" onChange={(event) => {
-                                const {target: {value} = {value: ''}} = event;
-                                setSearchBy(value)
-                            }}/>
+                            <Input id="search" type="search" onChange={searchChangeHandler}/>
                         </FormControl>
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid container justify="center" alignItems="center">
-                <Grid item={8} spacing={1}>
+            <Grid container alignItems="center" justifyContent="center" spacing={1}>
+                <Grid item>
                     <Paper>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell className={classes.column}>#</TableCell>
-                                    <TableCell className={classes.column}>Form 1</TableCell>
-                                    <TableCell className={classes.column}>Form 2</TableCell>
-                                    <TableCell className={classes.column}>Form 3</TableCell>
-                                    <TableCell className={classes.column}>Meaning</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {verbs.map(
-                                    ({id, group, v1, t1, v2, t2, v3, t3, meaning}, index) => (
-                                        <TableRow key={id} hover>
-                                            <TableCell>{index + 1}</TableCell>
-                                            <TableCell>
-                                                <span>{v1}</span>
-                                                {showTranscription && <span className={classes.t}> {t1}</span>}
-                                            </TableCell>
-                                            <TableCell>
-                                                <span>{v2}</span>
-                                                {showTranscription && <span className={classes.t}> {t2}</span>}
-                                            </TableCell>
-                                            <TableCell>
-                                                <span>{v3}</span>
-                                                {showTranscription && <span className={classes.t}> {t3}</span>}
-                                            </TableCell>
-                                            <TableCell>{meaning}</TableCell>
-                                        </TableRow>
-                                    )
-                                )}
-                            </TableBody>
-                        </Table>
+                        <VerbsTable verbs={verbs} showTranscription/>
                     </Paper>
                 </Grid>
             </Grid>
         </Page>
     );
 };
+
+export default IrregularVerbs

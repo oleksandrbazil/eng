@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 const Index = ({title, children}) => {
     return (
         <Grid container>
-            <Grid container justify="center" alignItems="center">
+            <Grid container alignItems="center" justifyContent="center">
                 {title && <h1>{title}</h1>}
             </Grid>
             <Grid container>

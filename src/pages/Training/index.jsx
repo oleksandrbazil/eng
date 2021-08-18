@@ -29,7 +29,7 @@ const START = 'start';
 const PROGRESS = 'progress';
 const FINISH = 'finish';
 
-export default () => {
+const Training = () => {
     const [status, setStatus] = useState(START);
     const [settings, setSettings] = useState(defaultSettings);
     const [cards, setCards] = useState([]);
@@ -102,7 +102,7 @@ export default () => {
 
     return (
         <Page title="Training">
-            <Grid container justify="center" alignItems="center">
+            <Grid container alignItems="center" justifyContent="center">
                 {status === START && <FormSettings
                     settings={settings}
                     maxNumberOfCards={words.length}
@@ -120,3 +120,5 @@ export default () => {
         </Page>
     );
 };
+
+export default Training
