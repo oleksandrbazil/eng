@@ -82,7 +82,7 @@ const TranscriptionCell = ({verb = '', transcription = '', showTranscription}) =
 };
 
 
-export default () => {
+const IrregularVerbs = () => {
     const classes = useStyles();
     const [verbs, setVerbs] = useState(irregularVerbs);
     const [searchBy, setSearchBy] = useState('');
@@ -154,3 +154,5 @@ export default () => {
         </Page>
     );
 };
+
+export default IrregularVerbs
