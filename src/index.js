@@ -1,9 +1,9 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import {HashRouter as Router} from "react-router-dom";
+import {HashRouter} from "react-router-dom";
 import {createTheme, MuiThemeProvider} from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 import red from '@material-ui/core/colors/red';
@@ -17,13 +17,15 @@ const theme = createTheme({
     },
 });
 
-ReactDOM.render(
-    <Router>
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
+    <HashRouter>
         <MuiThemeProvider theme={theme}>
             <App/>
         </MuiThemeProvider>
-    </Router>,
-    document.getElementById("root")
+    </HashRouter>
 );
 
 // If you want your app to work offline and load faster, you can change
