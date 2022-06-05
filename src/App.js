@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import {Route, Link} from "react-router-dom";
+import {Route, Link, Routes} from "react-router-dom";
 import {makeStyles} from '@material-ui/core/styles';
 // components
 import HomePage from "./pages/HomePage";
@@ -57,9 +57,11 @@ function App() {
                 </Paper>
             </header>
             <main>
+                <Routes>
                 {routeComponents.map(({path, component}) => (
                     <Route key={path} path={path} exact component={component}/>
                 ))}
+                </Routes>
             </main>
         </div>
     );
